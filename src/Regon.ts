@@ -28,7 +28,7 @@ export class Regon {
       method: 'POST',
       url: this._service,
       headers: {
-        'content-type': 'application/soap+xml;charset=utf-8',
+        'Content-Type': 'application/soap+xml;charset=utf-8',
         'sid': sid,
       },
       data: envelope,
