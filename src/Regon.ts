@@ -24,12 +24,14 @@ export class Regon {
   }
 
   sendEnvelope(envelope: string, sid: string = ''): Promise<any> {
-    return axios.post(this._service, {
+    return axios({
+      method: 'POST',
+      url: this._service,
       headers: {
         'Content-Type': 'application/soap+xml; charset=utf-8',
         'sid': sid,
       },
-      body: envelope
+      data: envelope,
     })
       .then( response => response.data.replace(/\n/g, '').match(/<s:Body>(.*?)<\/s:Body>/)[1])
       .then( response => parseStringPromise(response) )

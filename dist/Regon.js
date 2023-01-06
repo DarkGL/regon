@@ -62,7 +62,8 @@ var Regon = /** @class */ (function () {
         if (sid === void 0) { sid = ''; }
         return axios_1.default.post(this._service, {
             headers: {
-                'Content-Type': 'application/soap+xml; charset=utf-8',
+                'Content-Type': 'application/soap+xml',
+                'charset': 'utf-8',
                 'sid': sid,
             },
             body: envelope
