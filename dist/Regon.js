@@ -60,13 +60,14 @@ var Regon = /** @class */ (function () {
     };
     Regon.prototype.sendEnvelope = function (envelope, sid) {
         if (sid === void 0) { sid = ''; }
-        return axios_1.default.post(this._service, {
+        return (0, axios_1.default)({
+            method: 'POST',
+            url: this._service,
             headers: {
-                'Content-Type': 'application/soap+xml',
-                'charset': 'utf-8',
+                'Content-Type': 'application/soap+xml;charset=utf-8',
                 'sid': sid,
             },
-            body: envelope
+            data: envelope,
         })
             .then(function (response) { return response.data.replace(/\n/g, '').match(/<s:Body>(.*?)<\/s:Body>/)[1]; })
             .then(function (response) { return (0, xml2js_1.parseStringPromise)(response); })
