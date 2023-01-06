@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { ParametryWyszukiwania } from './interfaces';
 import { envelopeZaloguj, envelopeDaneSzukajPodmioty, envelopeWyloguj } from './envelopes';
 import { SERVICE_TEST, SERVICE, WSDL_TEST, WSDL } from './constants';
@@ -24,17 +24,15 @@ export class Regon {
   }
 
   sendEnvelope(envelope: string, sid: string = ''): Promise<any> {
-    return fetch(this._service, {
-      method: 'POST',
+    return axios.post(this._service, {
       headers: {
         'Content-Type': 'application/soap+xml; charset=utf-8',
         'sid': sid,
       },
       body: envelope
     })
-      .then( res => res.text() )
-      .then( res => res.replace(/\n/g, '').match(/<s:Body>(.*?)<\/s:Body>/)[1])
-      .then( res => parseStringPromise(res) )
+      .then( response => response.data.replace(/\n/g, '').match(/<s:Body>(.*?)<\/s:Body>/)[1])
+      .then( response => parseStringPromise(response) )
       .catch( (error: any) => console.log(error));
   }
     

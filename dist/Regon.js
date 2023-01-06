@@ -36,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var node_fetch_1 = require("node-fetch");
+exports.Regon = void 0;
+var axios_1 = require("axios");
 var envelopes_1 = require("./envelopes");
 var constants_1 = require("./constants");
 var xml2js_1 = require("xml2js");
@@ -50,26 +51,24 @@ var Regon = /** @class */ (function () {
     Regon.prototype.login = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.sendEnvelope(envelopes_1.envelopeZaloguj(this._key)).then(function (res) { return res.ZalogujResponse.ZalogujResult[0]; })];
+                return [2 /*return*/, this.sendEnvelope((0, envelopes_1.envelopeZaloguj)(this._key)).then(function (res) { return res.ZalogujResponse.ZalogujResult[0]; })];
             });
         });
     };
     Regon.prototype.logout = function (sid) {
-        return this.sendEnvelope(envelopes_1.envelopeWyloguj(sid)).then(function (res) { return res.WylogujResponse.WylogujResult[0] === 'true'; });
+        return this.sendEnvelope((0, envelopes_1.envelopeWyloguj)(sid)).then(function (res) { return res.WylogujResponse.WylogujResult[0] === 'true'; });
     };
     Regon.prototype.sendEnvelope = function (envelope, sid) {
         if (sid === void 0) { sid = ''; }
-        return node_fetch_1.default(this._service, {
-            method: 'POST',
+        return axios_1.default.post(this._service, {
             headers: {
                 'Content-Type': 'application/soap+xml; charset=utf-8',
                 'sid': sid,
             },
             body: envelope
         })
-            .then(function (res) { return res.text(); })
-            .then(function (res) { return res.replace(/\n/g, '').match(/<s:Body>(.*?)<\/s:Body>/)[1]; })
-            .then(function (res) { return xml2js_1.parseStringPromise(res); })
+            .then(function (response) { return response.data.replace(/\n/g, '').match(/<s:Body>(.*?)<\/s:Body>/)[1]; })
+            .then(function (response) { return (0, xml2js_1.parseStringPromise)(response); })
             .catch(function (error) { return console.log(error); });
     };
     Regon.prototype.getCompanyData = function (params) {
@@ -83,8 +82,8 @@ var Regon = /** @class */ (function () {
                     case 1:
                         sid = _a.sent();
                         console.log('Get comp, sid: ', sid);
-                        return [4 /*yield*/, this.sendEnvelope(envelopes_1.envelopeDaneSzukajPodmioty(params), sid)
-                                .then(function (res) { return xml2js_1.parseStringPromise(res.DaneSzukajPodmiotyResponse.DaneSzukajPodmiotyResult); })];
+                        return [4 /*yield*/, this.sendEnvelope((0, envelopes_1.envelopeDaneSzukajPodmioty)(params), sid)
+                                .then(function (res) { return (0, xml2js_1.parseStringPromise)(res.DaneSzukajPodmiotyResponse.DaneSzukajPodmiotyResult); })];
                     case 2:
                         data = _a.sent();
                         this.logout(sid);
